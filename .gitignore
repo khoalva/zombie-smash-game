@@ -110,7 +110,3 @@ Desktop.ini
 *.swp
 *.swo
 
-# Assets cache
-assets/sounds/
-assets/fonts/
-assets/images/
