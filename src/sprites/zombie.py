@@ -21,7 +21,7 @@ def load_shared_animations():
         idle_frames = []
         idle_path = os.path.join(config.IMG_DIR, "zombie", "Idle")
         if os.path.exists(idle_path):
-            idle_files = sorted([f for f in os.listdir(idle_path) if f.endswith('.png')])[:6]
+            idle_files = sorted([f for f in os.listdir(idle_path) if f.endswith('.png')])[:config.FRAME_LIMIT_IDLE]
             for file in idle_files:
                 img = load_image(f"zombie/Idle/{file}")
                 img = pygame.transform.scale(img, (120, 120))
@@ -31,7 +31,7 @@ def load_shared_animations():
         hurt_frames = []
         hurt_path = os.path.join(config.IMG_DIR, "zombie", "Hurt")
         if os.path.exists(hurt_path):
-            hurt_files = sorted([f for f in os.listdir(hurt_path) if f.endswith('.png')])[:3]
+            hurt_files = sorted([f for f in os.listdir(hurt_path) if f.endswith('.png')])[:config.FRAME_LIMIT_HURT]
             for file in hurt_files:
                 img = load_image(f"zombie/Hurt/{file}")
                 img = pygame.transform.scale(img, (120, 120))
@@ -41,7 +41,7 @@ def load_shared_animations():
         dying_frames = []
         dying_path = os.path.join(config.IMG_DIR, "zombie", "Dying")
         if os.path.exists(dying_path):
-            dying_files = sorted([f for f in os.listdir(dying_path) if f.endswith('.png')])[:8]
+            dying_files = sorted([f for f in os.listdir(dying_path) if f.endswith('.png')])[:config.FRAME_LIMIT_DYING]
             for file in dying_files:
                 img = load_image(f"zombie/Dying/{file}")
                 img = pygame.transform.scale(img, (120, 120))
@@ -85,7 +85,7 @@ class Zombie(pygame.sprite.Sprite):
         # Current animation state
         self.current_animation = "idle"
         self.frame_index = 0
-        self.animation_speed = 0.15  # Slower animation to reduce processing load
+        self.animation_speed = config.ANIMATION_SPEED
         self.frame_timer = 0
         
         # Sprite properties
@@ -98,7 +98,7 @@ class Zombie(pygame.sprite.Sprite):
         self.alive = True
         self.clicked = False
         self.appear_time = pygame.time.get_ticks()
-        self.lifetime = random.randint(2000, 4000)  # 2-4 seconds
+        self.lifetime = random.randint(config.ZOMBIE_LIFETIME_MIN, config.ZOMBIE_LIFETIME_MAX)
         
         # State for dying animation
         self.dying = False
@@ -119,7 +119,7 @@ class Zombie(pygame.sprite.Sprite):
             return
         
         # Handle hurt state - faster transition to dying
-        if self.current_animation == "hurt" and current_time - self.hurt_timer > 200:
+        if self.current_animation == "hurt" and current_time - self.hurt_timer > config.ZOMBIE_HURT_DURATION:
             self.current_animation = "dying"
             self.frame_index = 0
             self.frame_timer = 0
@@ -130,7 +130,7 @@ class Zombie(pygame.sprite.Sprite):
                 self.alive = False
                 return
             # Force death after short time to prevent lag
-            elif current_time - self.hurt_timer > 800:  # Force death after 800ms
+            elif current_time - self.hurt_timer > config.ZOMBIE_DEATH_TIMEOUT:
                 self.alive = False
                 return
         

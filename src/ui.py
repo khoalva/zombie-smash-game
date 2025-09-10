@@ -9,15 +9,8 @@ class GameUI:
         self.font_medium = pygame.font.Font(None, 36)
         self.font_small = pygame.font.Font(None, 24)
         
-        # Colors
-        self.white = (255, 255, 255)
-        self.black = (0, 0, 0)
-        self.green = (0, 255, 0)
-        self.red = (255, 0, 0)
-        self.yellow = (255, 255, 0)
-        self.blue = (0, 100, 255)
-        self.gray = (128, 128, 128)
-        self.dark_gray = (64, 64, 64)
+        # Use color constants from config
+        self.colors = config.Colors
         
         # UI positions
         self.score_pos = (20, 20)
@@ -32,17 +25,17 @@ class GameUI:
         
     def draw_score(self, screen, score):
         """Draw current score"""
-        score_text = self.font_medium.render(f"Score: {score}", True, self.green)
+        score_text = self.font_medium.render(f"Score: {score}", True, self.colors.GREEN)
         screen.blit(score_text, self.score_pos)
     
     def draw_misses(self, screen, misses):
         """Draw miss count"""
-        miss_text = self.font_medium.render(f"Miss: {misses}", True, self.red)
+        miss_text = self.font_medium.render(f"Miss: {misses}", True, self.colors.RED)
         screen.blit(miss_text, self.miss_pos)
     
     def draw_time(self, screen, remaining_time):
         """Draw remaining time"""
-        time_text = self.font_medium.render(f"Time: {remaining_time}", True, self.white)
+        time_text = self.font_medium.render(f"Time: {remaining_time}", True, self.colors.WHITE)
         screen.blit(time_text, self.time_pos)
     
     def draw_game_over(self, screen, final_score, total_misses):
@@ -50,44 +43,44 @@ class GameUI:
         # Semi-transparent overlay
         overlay = pygame.Surface((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         overlay.set_alpha(128)
-        overlay.fill(self.black)
+        overlay.fill(self.colors.BLACK)
         screen.blit(overlay, (0, 0))
         
         # Game over text
-        game_over_text = self.font_large.render("GAME OVER!", True, self.red)
+        game_over_text = self.font_large.render("GAME OVER!", True, self.colors.RED)
         game_over_rect = game_over_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT//2 - 60))
         screen.blit(game_over_text, game_over_rect)
         
         # Final score
-        score_text = self.font_medium.render(f"Final Score: {final_score}", True, self.white)
+        score_text = self.font_medium.render(f"Final Score: {final_score}", True, self.colors.WHITE)
         score_rect = score_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT//2 - 10))
         screen.blit(score_text, score_rect)
         
         # Total misses
-        miss_text = self.font_medium.render(f"Total Misses: {total_misses}", True, self.white)
+        miss_text = self.font_medium.render(f"Total Misses: {total_misses}", True, self.colors.WHITE)
         miss_rect = miss_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT//2 + 30))
         screen.blit(miss_text, miss_rect)
         
         # Restart instruction
-        restart_text = self.font_small.render("Press SPACE to return to menu or ESC to quit", True, self.yellow)
+        restart_text = self.font_small.render("Press SPACE to return to menu or ESC to quit", True, self.colors.YELLOW)
         restart_rect = restart_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT//2 + 80))
         screen.blit(restart_text, restart_rect)
     
     def draw_main_menu(self, screen):
         """Draw main menu"""
         # Title with shadow effect
-        title_shadow = self.font_large.render("ZOMBIE WHACKER", True, self.black)
+        title_shadow = self.font_large.render("ZOMBIE WHACKER", True, self.colors.BLACK)
         title_shadow_rect = title_shadow.get_rect(center=(config.SCREEN_WIDTH//2 + 3, config.SCREEN_HEIGHT//2 - 117))
         screen.blit(title_shadow, title_shadow_rect)
         
-        title_text = self.font_large.render("ZOMBIE WHACKER", True, self.red)
+        title_text = self.font_large.render("ZOMBIE WHACKER", True, self.colors.RED)
         title_rect = title_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT//2 - 120))
         screen.blit(title_text, title_rect)
         
         # Menu items
         menu_start_y = config.SCREEN_HEIGHT//2 - 30
         for i, item in enumerate(self.menu_items):
-            color = self.yellow if i == self.selected_item else self.white
+            color = self.colors.YELLOW if i == self.selected_item else self.colors.WHITE
             text = self.font_medium.render(item, True, color)
             text_rect = text.get_rect(center=(config.SCREEN_WIDTH//2, menu_start_y + i * 50))
             
@@ -95,24 +88,24 @@ class GameUI:
             if i == self.selected_item:
                 highlight_rect = pygame.Rect(text_rect.x - 10, text_rect.y - 5, 
                                            text_rect.width + 20, text_rect.height + 10)
-                pygame.draw.rect(screen, self.dark_gray, highlight_rect)
-                pygame.draw.rect(screen, self.yellow, highlight_rect, 2)
+                pygame.draw.rect(screen, self.colors.DARK_GRAY, highlight_rect)
+                pygame.draw.rect(screen, self.colors.YELLOW, highlight_rect, 2)
             
             screen.blit(text, text_rect)
         
         # Instructions
-        instruction_text = self.font_small.render("Use UP/DOWN arrows and ENTER to navigate", True, self.gray)
+        instruction_text = self.font_small.render("Use UP/DOWN arrows and ENTER to navigate", True, self.colors.GRAY)
         instruction_rect = instruction_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT - 50))
         screen.blit(instruction_text, instruction_rect)
     
     def draw_settings_menu(self, screen, music_volume, sound_volume):
         """Draw settings menu"""
         # Title with shadow effect
-        title_shadow = self.font_large.render("SETTINGS", True, self.black)
+        title_shadow = self.font_large.render("SETTINGS", True, self.colors.BLACK)
         title_shadow_rect = title_shadow.get_rect(center=(config.SCREEN_WIDTH//2 + 3, config.SCREEN_HEIGHT//2 - 117))
         screen.blit(title_shadow, title_shadow_rect)
         
-        title_text = self.font_large.render("SETTINGS", True, self.blue)
+        title_text = self.font_large.render("SETTINGS", True, self.colors.BLUE)
         title_rect = title_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT//2 - 120))
         screen.blit(title_text, title_rect)
         
@@ -120,15 +113,15 @@ class GameUI:
         settings_start_y = config.SCREEN_HEIGHT//2 - 50
         
         for i, item in enumerate(self.settings_items):
-            color = self.yellow if i == self.selected_item else self.white
+            color = self.colors.YELLOW if i == self.selected_item else self.colors.WHITE
             
             # Draw selection highlight
             if i == self.selected_item:
                 highlight_rect = pygame.Rect(config.SCREEN_WIDTH//2 - 200, 
                                            settings_start_y + i * 60 - 5,
                                            400, 50)
-                pygame.draw.rect(screen, self.dark_gray, highlight_rect)
-                pygame.draw.rect(screen, self.yellow, highlight_rect, 2)
+                pygame.draw.rect(screen, self.colors.DARK_GRAY, highlight_rect)
+                pygame.draw.rect(screen, self.colors.YELLOW, highlight_rect, 2)
             
             if item == "MUSIC VOLUME":
                 # Draw music volume control
@@ -143,15 +136,15 @@ class GameUI:
                 bar_height = 20
                 
                 # Background bar
-                pygame.draw.rect(screen, self.gray, (bar_x, bar_y, bar_width, bar_height))
+                pygame.draw.rect(screen, self.colors.GRAY, (bar_x, bar_y, bar_width, bar_height))
                 # Volume bar
                 volume_width = int(bar_width * music_volume)
-                pygame.draw.rect(screen, self.green, (bar_x, bar_y, volume_width, bar_height))
+                pygame.draw.rect(screen, self.colors.GREEN, (bar_x, bar_y, volume_width, bar_height))
                 # Border
-                pygame.draw.rect(screen, self.white, (bar_x, bar_y, bar_width, bar_height), 2)
+                pygame.draw.rect(screen, self.colors.WHITE, (bar_x, bar_y, bar_width, bar_height), 2)
                 
                 # Volume percentage
-                volume_text = self.font_small.render(f"{int(music_volume * 100)}%", True, self.white)
+                volume_text = self.font_small.render(f"{int(music_volume * 100)}%", True, self.colors.WHITE)
                 screen.blit(volume_text, (bar_x + bar_width + 10, bar_y))
                 
             elif item == "SOUND EFFECTS":
@@ -167,15 +160,15 @@ class GameUI:
                 bar_height = 20
                 
                 # Background bar
-                pygame.draw.rect(screen, self.gray, (bar_x, bar_y, bar_width, bar_height))
+                pygame.draw.rect(screen, self.colors.GRAY, (bar_x, bar_y, bar_width, bar_height))
                 # Volume bar
                 volume_width = int(bar_width * sound_volume)
-                pygame.draw.rect(screen, self.blue, (bar_x, bar_y, volume_width, bar_height))
+                pygame.draw.rect(screen, self.colors.BLUE, (bar_x, bar_y, volume_width, bar_height))
                 # Border
-                pygame.draw.rect(screen, self.white, (bar_x, bar_y, bar_width, bar_height), 2)
+                pygame.draw.rect(screen, self.colors.WHITE, (bar_x, bar_y, bar_width, bar_height), 2)
                 
                 # Volume percentage
-                volume_text = self.font_small.render(f"{int(sound_volume * 100)}%", True, self.white)
+                volume_text = self.font_small.render(f"{int(sound_volume * 100)}%", True, self.colors.WHITE)
                 screen.blit(volume_text, (bar_x + bar_width + 10, bar_y))
                 
             else:  # BACK button
@@ -185,9 +178,9 @@ class GameUI:
         
         # Instructions
         if self.selected_item < 2:  # Volume controls
-            instruction_text = self.font_small.render("Use LEFT/RIGHT arrows to adjust volume", True, self.gray)
+            instruction_text = self.font_small.render("Use LEFT/RIGHT arrows to adjust volume", True, self.colors.GRAY)
         else:  # Back button
-            instruction_text = self.font_small.render("Press ENTER to go back", True, self.gray)
+            instruction_text = self.font_small.render("Press ENTER to go back", True, self.colors.GRAY)
         instruction_rect = instruction_text.get_rect(center=(config.SCREEN_WIDTH//2, config.SCREEN_HEIGHT - 50))
         screen.blit(instruction_text, instruction_rect)
     
